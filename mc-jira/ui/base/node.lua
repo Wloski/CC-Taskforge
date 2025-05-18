@@ -9,7 +9,10 @@ function Node:new(props)
         height = props.height or 1,
         parent = props.parent,
         onClick = props.onClick,
+        padding = props.padding or 0,
         backgroundColor = props.backgroundColor or nil,
+        textColor = props.textColor or colors.white,
+        centerTextEnabled = props.centerTextEnabled or false,
         children = {}
     }
     setmetatable(instance, self)
@@ -31,12 +34,12 @@ function Node:addChild(child)
 end
 
 function Node:globalPosition()
-    local x, y = self.x, self.y
-    local p = self.parent
-    while p do
-        x = x + p.x
-        y = y + p.y
-        p = p.parent
+    local x, y = self.x or 0, self.y or 0
+    local parent = self.parent
+    while parent do
+        x = x + (parent.x or 0)
+        y = y + (parent.y or 0)
+        parent = parent.parent
     end
     return x, y
 end
@@ -71,6 +74,12 @@ end
 function Node:containsPoint(px, py)
     local gx, gy = self:globalPosition()
     return px >= gx and px < gx + self.width and py >= gy and py < gy + self.height
+end
+
+function Node:centerText(text, x, y, width, monitor)
+    local startX = x + math.floor((width - string.len(text)) / 2)
+    monitor.setCursorPos(startX, y)
+    monitor.write(text)
 end
 
 return Node

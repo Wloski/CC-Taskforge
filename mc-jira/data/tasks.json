@@ -1,57 +1,56 @@
 {
   {
     text = "Setup drilling operation for oil",
+    color = 16384,
     id = "mc-1070",
     status = 2,
   },
   {
     text = "Setup rail network to transport oil",
+    color = 8192,
     id = "mc-8317",
-    status = 1,
+    status = 2,
   },
   {
     text = "Setup AE2 main network controller to support more channels",
+    color = 2048,
     id = "mc-4396",
-    status = 1,
+    status = 3,
   },
   {
     text = "Setup ore 4x processing",
+    color = 2,
     id = "mc-4650",
-    status = 3,
+    status = 1,
   },
   {
     text = "Fix lighting with the base",
+    color = 512,
     id = "mc-5082",
-    status = 3,
+    status = 1,
   },
   {
     text = "Fix columns in AE2 room",
+    color = 1024,
     id = "mc-1194",
-    status = 3,
+    status = 1,
   },
   {
     text = "Redesign landing zone area",
+    color = 4096,
     id = "mc-1479",
-    status = 1,
+    status = 2,
   },
   {
     text = "Setup sand quarry",
+    color = 64,
     id = "mc-1776",
-    status = 1,
+    status = 2,
   },
   {
     text = "Make a villager hall",
+    color = 32,
     id = "mc-1706",
-    status = 2,
-  },
-  {
-    text = "Upgrade bookshelf's to hellshelf",
-    id = "mc-9758",
-    status = 2,
-  },
-  {
-    text = "Build runway",
-    id = "mc-6628",
     status = 2,
   },
 }

@@ -1,9 +1,10 @@
 local JiraBoardModule = require("mc-jira/ui/screens/jira_board")
-local MainScreenModule = require("mc-jira/ui/screens/main_screen")
+local SummaryScreenModule = require("mc-jira/ui/screens/summary_screen")
 
 local DI = require("mc-jira/di/di")
 local taskUtils = DI.get("taskUtils")
 local monitorUtils = DI.get("monitorUtils")
+local configUtils = DI.get("configUtils")
 
 local ScreenProvider = {}
 function ScreenProvider.getJiraBoardScreen()
@@ -13,15 +14,16 @@ function ScreenProvider.getJiraBoardScreen()
         function(tasks)
             taskUtils:saveTasks(tasks)
         end,
+        configUtils.getConfig(),
         monitorUtils.width,
         monitorUtils.height
     )
     return JiraBoardModule:create()
 end
 
-function ScreenProvider.getMainScreen()
+function ScreenProvider.getSummaryScreen()
     local _tasks = taskUtils:loadTasks()
-    MainScreenModule:build(
+    SummaryScreenModule:build(
         _tasks, 
         function(tasks)
             taskUtils:saveTasks(tasks)
@@ -29,7 +31,7 @@ function ScreenProvider.getMainScreen()
         monitorUtils.width,
         monitorUtils.height
     )
-    return MainScreenModule:create()
+    return SummaryScreenModule:create()
 end
 
 return ScreenProvider

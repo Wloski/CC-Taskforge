@@ -1,4 +1,4 @@
-local MainScreenModule = require("mc-jira/ui/screens/main_screen")
+local SummaryScreenModule = require("mc-jira/ui/screens/summary_screen")
 local JiraBoardModule = require("mc-jira/ui/screens/jira_board")
 local screenProvider = require("mc-jira/ui/screens/screen_provider")
 
@@ -9,8 +9,8 @@ local navigator = {
 
 local currentModuleName = nil
 
-navigator.nameToId["main"] = MainScreenModule.id
-navigator.idToModule[MainScreenModule.id] = function() return screenProvider.getMainScreen() end
+navigator.nameToId["summary"] = SummaryScreenModule.id
+navigator.idToModule[SummaryScreenModule.id] = function() return screenProvider.getSummaryScreen() end
 
 navigator.nameToId["jira"] = JiraBoardModule.id
 navigator.idToModule[JiraBoardModule.id] = function() return screenProvider.getJiraBoardScreen() end
@@ -31,7 +31,7 @@ function navigator.to(name)
     currentModuleName = name
 end
 
-function navigator.getCurrentModule()
+function navigator.getCurrentScreen()
     return (navigator.getModuleByName(currentModuleName))()
 end
 

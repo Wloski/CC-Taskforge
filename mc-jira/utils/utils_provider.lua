@@ -1,6 +1,7 @@
 local DI = require("mc-jira/di/di")
 local taskModule = require("mc-jira/utils/task_utils")
 local monitorModule = require("mc-jira/utils/monitor_utils")
+local configModule = require("mc-jira/utils/config_utils")
 local SAVE_PATH = "mc-jira/data/tasks.json"
 
 DI.register("taskUtils", 
@@ -12,5 +13,11 @@ DI.register("taskUtils",
 DI.register("monitorUtils",
     function()
         return monitorModule
+    end
+)
+
+DI.register("configUtils",
+    function()
+        return configModule
     end
 )

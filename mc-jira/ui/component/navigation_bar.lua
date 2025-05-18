@@ -1,8 +1,8 @@
 local Node = require("mc-jira/ui/base.node")
-local Button = require("mc-jira/ui/component.button")
-local Text = require("mc-jira/ui/component.text")
-local Column = require("mc-jira/ui/component.column")
-local Row = require("mc-jira/ui/component.row")
+local Button = require("mc-jira/ui/base.button")
+local Text = require("mc-jira/ui/base.text")
+local Column = require("mc-jira/ui/base.column")
+local Row = require("mc-jira/ui/base.row")
 local colorList = require("mc-jira/utils/colors")
 
 local navigationBar = Row:new({ 
@@ -16,7 +16,7 @@ navigationBar:addChild(Text:new({
     width = monitorWidth, 
     centerText = false,
     onClick = function()
-        os.queueEvent("toggle_view", "main")
+        os.queueEvent("toggle_view", "summary")
     end
 }))
 navigationBar:addChild(Text:new({ 

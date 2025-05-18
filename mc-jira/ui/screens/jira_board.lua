@@ -1,8 +1,8 @@
 local Node = require("mc-jira/ui/base.node")
-local Button = require("mc-jira/ui/component.button")
-local Text = require("mc-jira/ui/component.text")
-local Column = require("mc-jira/ui/component.column")
-local Row = require("mc-jira/ui/component.row")
+local Button = require("mc-jira/ui/base.button")
+local Text = require("mc-jira/ui/base.text")
+local Column = require("mc-jira/ui/base.column")
+local Row = require("mc-jira/ui/base.row")
 local colorList = require("mc-jira/utils/colors")
 local NavigationBar = require("mc-jira/ui/component.navigation_bar")
 local BaseScreen = require("mc-jira/ui/screens/base_screen")
@@ -10,34 +10,28 @@ local BaseScreen = require("mc-jira/ui/screens/base_screen")
 local monitorWidth = 0
 local monitorHeight = 0
 
-local configFile = fs.open("mc-jira/data/config.json", "r") or {}
-local config = textutils.unserializeJSON(configFile.readAll())
-configFile.close()
-
-local COLS = config.COLS
+local config = nil
+local COLS = nil
 local tasks = {}
-local VISIBLE_ROWS = config.VISIBLE_ROWS or 4
+local VISIBLE_ROWS = nil
 local saveTasks = nil
 
 local scrollPositions = scrollPositions or {}
-for i = 1, #COLS do
-    scrollPositions[i] = scrollPositions[i] or 1
-end
+
 
 local JiraBoard = BaseScreen:new()
-function JiraBoard:build(_tasks, _saveTasks, _monitorWidth, monitorHeight)
+function JiraBoard:build(_tasks, _saveTasks, _config, _monitorWidth, monitorHeight)
     tasks = _tasks
     saveTasks = _saveTasks
+    config = _config
     monitorWidth = _monitorWidth
     monitorHeight = _monitorHeight
-    if tasks == nil then
-        print("Error loading tasks")
-        return
-    elseif saveTasks == nil then
-        print("Error setting saveTasks jira_board : Line 34")
-        return
-    else
-        return
+    
+    -- Setup config items
+    COLS = _config.COLS
+    VISIBLE_ROWS = _config.VISIBLE_ROWS or 4
+    for i = 1, #COLS do
+        scrollPositions[i] = scrollPositions[i] or 1
     end
 end
 
@@ -58,7 +52,7 @@ function JiraBoard:create()
         titleRow:addChild(Text:new({ 
             content = COLS[i], 
             width = rowTextWidth, 
-            centerText = true
+            centerTextEnabled = true
         }))
     end
 
@@ -67,7 +61,6 @@ function JiraBoard:create()
         local textColumn = Column:new({
             width = rowTextWidth,
             height = boardHeight,
-            padding = 1,
         })
         
         local columnTasks = {}
@@ -110,17 +103,21 @@ function JiraBoard:create()
                 backgroundColor = colors.gray
             })
             buttonRow:addChild(Button:new({
-                label = "Up",
+                label = string.char(24),
                 width = 3,
                 height = 1,
+                backgroundColor = colors.gray,
+                centerTextEnabled = true,
                 onClick = function()
                     scrollPositions[i] = math.max(1, scrollPositions[i] - 1)
                 end
             }))
             buttonRow:addChild(Button:new({
-                label = "Down",
-                width = 5,
+                label = string.char(25),
+                width = 3,
                 height = 1,
+                backgroundColor = colors.gray,
+                centerTextEnabled = true,
                 onClick = function()
                     local maxScroll = math.max(1, #columnTasks - (VISIBLE_ROWS - 1))
                     scrollPositions[i] = math.min(maxScroll, scrollPositions[i] + 1)
