@@ -1,0 +1,16 @@
+return {
+    colors.red,
+    colors.green,
+    colors.blue,
+    colors.orange,
+    colors.cyan,
+    colors.purple,
+    colors.brown,
+    colors.pink,
+    colors.lime,
+    colors.lightBlue,
+    colors.magenta,
+    colors.yellow,
+    colors.white,
+    colors.gray,
+}

@@ -1,0 +1,8 @@
+{
+    "COLS": [
+        "To Do",
+        "In Progress",
+        "Done"
+    ],
+    "VISIBLE_ROWS": 4
+}
