@@ -31,7 +31,7 @@ function SummaryScreenModule:create(monitor)
     local titleRow = Row:new({
         width = monitorWidth - 2,
         height = 1,
-        backgroundColor = colors.blue,
+        backgroundColor = colors.gray,
     })
     local title = Text:new({
         content = "MC-JIRA",
@@ -39,14 +39,13 @@ function SummaryScreenModule:create(monitor)
         width = monitorWidth - 2,
         height = 1,
         centerTextEnabled = true,
-        backgroundColor = colors.blue,
     })
     titleRow:addChild(title)
 
-    local ticketDispalyWidth = 40
+    local ticketDispalyWidth = monitorWidth - 2
     local ticketsColumn = Column:new({
         width = ticketDispalyWidth,
-        height = 20,
+        height = 15,
     })
     for i = 1, #tasks do
         local task = tasks[i]
@@ -67,6 +66,17 @@ function SummaryScreenModule:create(monitor)
             content = "[" .. tasks[i].id .. "]" .. tasks[i].text,
             width = 30,
             height = 1,
+            onClick = function()
+                NavigationBar:addChild(Text:new({ 
+                    content = "| " .. task.id .. "|", 
+                    width = monitorWidth, 
+                    centerText = false,
+                    onClick = function()
+                        os.queueEvent("toggle_view", "ticket", task)
+                    end
+                }))
+                os.queueEvent("toggle_view", "ticket", task)
+            end
         })
 
         local taskStatus = Text:new({

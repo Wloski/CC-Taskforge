@@ -1,5 +1,6 @@
 local JiraBoardModule = require("mc-jira/ui/screens/jira_board")
 local SummaryScreenModule = require("mc-jira/ui/screens/summary_screen")
+local TicketScreenModule = require("mc-jira/ui/screens/ticket_screen")
 
 local DI = require("mc-jira/di/di")
 local taskUtils = DI.get("taskUtils")
@@ -32,6 +33,15 @@ function ScreenProvider.getSummaryScreen()
         monitorUtils.height
     )
     return SummaryScreenModule:create()
+end
+
+function ScreenProvider.getTicketScreen(ticket)
+    TicketScreenModule:build(
+        ticket,
+        monitorUtils.width,
+        monitorUtils.height
+    )
+    return TicketScreenModule:create()
 end
 
 return ScreenProvider

@@ -22,7 +22,7 @@ parallel.waitForAny(
             currentView:draw(monitorUtils.monitor)
             local event, side, x, y = os.pullEvent()
             if (event == "toggle_view") then
-                navigator.to(side)
+                navigator.to(side, x)
             elseif (event == "monitor_touch") then
                 currentView:handleTouch(x, y)
             end
