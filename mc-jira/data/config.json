@@ -4,5 +4,11 @@
         "In Progress",
         "Done"
     ],
-    "VISIBLE_ROWS": 4
+    "VISIBLE_ROWS": 4,
+    "priority": [
+        "Low",
+        "Medium",
+        "High",
+        "Critical"
+    ]
 }

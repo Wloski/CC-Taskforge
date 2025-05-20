@@ -10,18 +10,28 @@ local BaseScreen = require("mc-jira/ui/screens/base_screen")
 local monitorWidth = 0
 local monitorHeight = 0
 
-local configFile = fs.open("mc-jira/data/config.json", "r") or {}
-local config = textutils.unserializeJSON(configFile.readAll())
-configFile.close()
-local COLS = config.COLS
+local config = nil
+local COLS = nil
 
 local tasks = {}
 local saveTasks = nil
 
+local function getStatusColor(status)
+    if status == 2 then
+        return colors.blue
+    elseif status == 3 then
+        return colors.green
+    else
+        return colors.gray
+    end
+end
+
 local SummaryScreenModule = BaseScreen:new()
-function SummaryScreenModule:build(_tasks, _saveTasks, _monitorWidth, _monitorHeight)
+function SummaryScreenModule:build(_tasks, _saveTasks, _config, _monitorWidth, _monitorHeight)
     tasks = _tasks
     saveTasks = _saveTasks
+    config = _config
+    COLS = config.COLS
     monitorWidth = _monitorWidth
     monitorHeight = _monitorHeight
 end
@@ -55,26 +65,15 @@ function SummaryScreenModule:create(monitor)
             padding = 1,
         })
 
-        if task.status == 2 then
-            textColor = colors.blue
-        elseif task.status == 3 then
-            textColor = colors.green
-        else
-            textColor = colors.gray
-        end
         local taskName = Text:new({
-            content = "[" .. tasks[i].id .. "]" .. tasks[i].text,
-            width = 30,
+            content = "[" .. task.id .. "]" .. task.text,
+            width = 25,
             height = 1,
             onClick = function()
-                NavigationBar:addChild(Text:new({ 
-                    content = "| " .. task.id .. "|", 
-                    width = monitorWidth, 
-                    centerText = false,
-                    onClick = function()
-                        os.queueEvent("toggle_view", "ticket", task)
-                    end
-                }))
+                local onTaskClicked = function()
+                    os.queueEvent("toggle_view", "ticket", task)
+                end
+                NavigationBar.addNavigationBarItem(task.id, task.id, onTaskClicked)
                 os.queueEvent("toggle_view", "ticket", task)
             end
         })
@@ -83,7 +82,7 @@ function SummaryScreenModule:create(monitor)
             content = COLS[task.status],
             width = 11,
             height = 1,
-            textColor = textColor,
+            textColor = getStatusColor(task.status),
             onClick = function()
                 if (task.status == #COLS) then
                     task.status = 1
@@ -94,15 +93,17 @@ function SummaryScreenModule:create(monitor)
             end
         })
 
+        local onDeleteClicked = function()
+            table.remove(tasks, i)
+            NavigationBar.removeNavigationBarItem(task.id)
+            saveTasks(tasks)
+        end
         local deleteButton = Button:new({
             label = "Delete",
             width = 7,
             height = 1,
             textColor = colors.red,
-            onClick = function()
-                table.remove(tasks, i)
-                saveTasks(tasks)
-            end
+            onClick = onDeleteClicked,
         })
 
         ticketRow:addChild(taskName)
@@ -112,7 +113,7 @@ function SummaryScreenModule:create(monitor)
         ticketsColumn:addChild(ticketRow)
     end
 
-    summaryScreenNode:addChild(NavigationBar)
+    summaryScreenNode:addChild(NavigationBar.getNavBar())
     summaryScreenNode:addChild(titleRow)
     summaryScreenNode:addChild(ticketsColumn)
 
@@ -120,4 +121,3 @@ function SummaryScreenModule:create(monitor)
 end
 
 return SummaryScreenModule
-    

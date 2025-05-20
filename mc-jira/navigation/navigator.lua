@@ -7,7 +7,7 @@ local navigator = {
     nameToId = {},
     idToModule = {}
 }
-
+local stack = {}
 local currentModuleName = nil
 local paramaterToPass = nil
 
@@ -35,6 +35,18 @@ end
 function navigator.to(name, param)
     currentModuleName = name
     paramaterToPass = param
+    table.insert(stack, {currentModuleName = name, paramaterToPass = param})
+end
+
+function navigator.back()
+    local navItem = stack[#stack - 1]
+    if (navItem == nil) then
+        return
+    end
+    currentModuleName = navItem.currentModuleName
+    paramaterToPass = navItem.paramaterToPass
+    table.remove(stack, #stack)
+    table.remove(stack, #stack)
 end
 
 function navigator.getCurrentScreen()

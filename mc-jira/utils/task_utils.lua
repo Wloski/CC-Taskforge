@@ -8,7 +8,11 @@ function M.new(fs, textutils, save_path)
     }
 
     function self:generateTaskId()
-        return "mc-" .. math.random(1000, 9999)
+        return "MC-" .. math.random(1000, 9999)
+    end
+
+    function self:generateId()
+        return math.random(1000, 999999)
     end
 
     function self:findTaskById(tasks, id)
@@ -39,12 +43,21 @@ function M.new(fs, textutils, save_path)
                     table.insert(tasks, {
                         id = task.id,
                         text = task.text,
-                        status = type(task.status) == "number" and task.status or 1
+                        status = type(task.status) == "number" and task.status or 1,
+                        priority = task.priority or 1,
+                        startDate = task.startDate or nil
                     })
                 end
             end
         end
         return tasks
+    end
+
+    function self:moveTask(task, status)
+        task.status = status
+        if task.startDate == nil then
+            task.startDate = os.date("%c")
+        end
     end
 
     function self:saveTasks(tasks)

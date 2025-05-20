@@ -11,9 +11,12 @@ local ScreenProvider = {}
 function ScreenProvider.getJiraBoardScreen()
     local _tasks = taskUtils:loadTasks()
     JiraBoardModule:build(
-        _tasks, 
+        _tasks,
         function(tasks)
             taskUtils:saveTasks(tasks)
+        end,
+        function(task, status)
+            taskUtils:moveTask(task, status)
         end,
         configUtils.getConfig(),
         monitorUtils.width,
@@ -25,10 +28,11 @@ end
 function ScreenProvider.getSummaryScreen()
     local _tasks = taskUtils:loadTasks()
     SummaryScreenModule:build(
-        _tasks, 
+        _tasks,
         function(tasks)
             taskUtils:saveTasks(tasks)
         end,
+        configUtils.getConfig(),
         monitorUtils.width,
         monitorUtils.height
     )
@@ -38,6 +42,7 @@ end
 function ScreenProvider.getTicketScreen(ticket)
     TicketScreenModule:build(
         ticket,
+        configUtils.getConfig(),
         monitorUtils.width,
         monitorUtils.height
     )

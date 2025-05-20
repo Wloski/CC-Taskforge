@@ -3,8 +3,10 @@ local Node = {}
 function Node:new(props)
     props = props or {}
     local instance = {
+        id = props.id or math.random(1000, 999999),
         x = props.x or 1,
         y = props.y or 1,
+        position = props.position or "",
         width = props.width or 1,
         height = props.height or 1,
         parent = props.parent,
@@ -46,8 +48,9 @@ end
 
 function Node:draw(monitor)
     if self.backgroundColor then
-        local x, y = self:globalPosition()
         monitor.setBackgroundColor(self.backgroundColor)
+
+        local x, y = self:globalPosition()
         for dy = 0, self.height - 1 do
             monitor.setCursorPos(x, y + dy)
             monitor.write(string.rep(" ", self.width))

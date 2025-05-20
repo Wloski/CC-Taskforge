@@ -12,18 +12,23 @@ local monitorHeight = 0
 
 local config = nil
 local COLS = nil
-local tasks = {}
 local VISIBLE_ROWS = nil
-local saveTasks = nil
+
+local saveTask = nil
+local moveTask = nil
+local tasks = {}
+
+
+
 
 local scrollPositions = scrollPositions or {}
 
 
 local JiraBoard = BaseScreen:new()
-function JiraBoard:build(_tasks, _saveTasks, _config, _monitorWidth, monitorHeight)
+function JiraBoard:build(_tasks, _saveTask, _moveTask, _config, _monitorWidth, _monitorHeight)
     tasks = _tasks
-    saveTasks = _saveTasks
-    config = _config
+    saveTask = _saveTask
+    moveTask = _moveTask
     monitorWidth = _monitorWidth
     monitorHeight = _monitorHeight
     
@@ -85,13 +90,16 @@ function JiraBoard:create()
                 content = displayText,
                 width = textColumn.width,
                 textColor = task.color,
+                wrapTextEnabled = true,
                 onClick = function()
-                    if (task.status == #COLS) then
-                        task.status = 1
+                    local status = task.status
+                    if (status == #COLS) then
+                        status = 1
                     else
-                        task.status = task.status + 1
+                        status = status + 1
                     end
-                    saveTasks(tasks)
+                    moveTask(task, status)
+                    saveTask(tasks)
                 end
             }))
         end 
@@ -136,7 +144,7 @@ function JiraBoard:create()
         end
     end
 
-    node:addChild(NavigationBar)
+    node:addChild(NavigationBar.getNavBar())
     node:addChild(titleRow)
     node:addChild(jiraContentRow)
 

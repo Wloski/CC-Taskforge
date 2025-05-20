@@ -1,4 +1,4 @@
-local Node = require("mc-jira.ui.base.node")
+local Node = require("mc-jira/ui/base/node")
 local Row = setmetatable({}, { __index = Node })
 Row.__index = Row
 
@@ -21,6 +21,15 @@ function Row:addChild(child)
         child.y = 0
     end
     table.insert(self.children, child)
+end
+
+function Row:Redraw()
+    local x = 0
+    for _, child in ipairs(self.children) do
+        child.x = x
+        child.y = 0
+        x = x + (child.width or 1) + (self.padding or 0)
+    end
 end
 
 return Row
