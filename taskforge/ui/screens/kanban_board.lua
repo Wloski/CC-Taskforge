@@ -1,11 +1,11 @@
-local Node = require("mc-jira/ui/base.node")
-local Button = require("mc-jira/ui/base.button")
-local Text = require("mc-jira/ui/base.text")
-local Column = require("mc-jira/ui/base.column")
-local Row = require("mc-jira/ui/base.row")
-local colorList = require("mc-jira/utils/colors")
-local NavigationBar = require("mc-jira/ui/component.navigation_bar")
-local BaseScreen = require("mc-jira/ui/screens/base_screen")
+local Node = require("taskforge/ui/base.node")
+local Button = require("taskforge/ui/base.button")
+local Text = require("taskforge/ui/base.text")
+local Column = require("taskforge/ui/base.column")
+local Row = require("taskforge/ui/base.row")
+local colorList = require("taskforge/utils/colors")
+local NavigationBar = require("taskforge/ui/component.navigation_bar")
+local BaseScreen = require("taskforge/ui/screens/base_screen")
 
 local monitorWidth = 0
 local monitorHeight = 0
@@ -18,11 +18,7 @@ local saveTask = nil
 local moveTask = nil
 local tasks = {}
 
-
-
-
 local scrollPositions = scrollPositions or {}
-
 
 local JiraBoard = BaseScreen:new()
 function JiraBoard:build(_tasks, _saveTask, _moveTask, _config, _monitorWidth, _monitorHeight)
@@ -31,7 +27,7 @@ function JiraBoard:build(_tasks, _saveTask, _moveTask, _config, _monitorWidth, _
     moveTask = _moveTask
     monitorWidth = _monitorWidth
     monitorHeight = _monitorHeight
-    
+
     -- Setup config items
     COLS = _config.COLS
     VISIBLE_ROWS = _config.VISIBLE_ROWS or 4
@@ -46,17 +42,17 @@ function JiraBoard:create()
     local boardWidth = monitorWidth - 2
     local boardHeight = 15
 
-    local titleRow = Row:new({ 
-        y = 2, 
-        width = boardWidth, 
-        height = 1, 
-        backgroundColor = colors.gray 
+    local titleRow = Row:new({
+        y = 2,
+        width = boardWidth,
+        height = 1,
+        backgroundColor = colors.gray
     })
     local rowTextWidth = boardWidth / #COLS
     for i = 1, #COLS do
-        titleRow:addChild(Text:new({ 
-            content = COLS[i], 
-            width = rowTextWidth, 
+        titleRow:addChild(Text:new({
+            content = COLS[i],
+            width = rowTextWidth,
             centerTextEnabled = true
         }))
     end
@@ -67,7 +63,7 @@ function JiraBoard:create()
             width = rowTextWidth,
             height = boardHeight,
         })
-        
+
         local columnTasks = {}
         for y = 1, #tasks do
             local task = tasks[y]
@@ -102,7 +98,7 @@ function JiraBoard:create()
                     saveTask(tasks)
                 end
             }))
-        end 
+        end
 
         if #columnTasks > VISIBLE_ROWS then
             local buttonRow = Row:new({
@@ -139,7 +135,7 @@ function JiraBoard:create()
             local spacer = Column:new({
                 width = 1,
                 height = boardHeight,
-            })  
+            })
             jiraContentRow:addChild(spacer)
         end
     end

@@ -1,4 +1,4 @@
-local Node = require("mc-jira.ui.base.node")
+local Node = require("taskforge/ui/base/node")
 local Button = setmetatable({}, { __index = Node })
 Button.__index = Button
 

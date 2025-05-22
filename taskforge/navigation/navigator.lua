@@ -1,7 +1,7 @@
-local SummaryScreenModule = require("mc-jira/ui/screens/summary_screen")
-local JiraBoardModule = require("mc-jira/ui/screens/jira_board")
-local screenProvider = require("mc-jira/ui/screens/screen_provider")
-local TicketScreenModule = require("mc-jira/ui/screens/ticket_screen")
+local SummaryScreenModule = require("taskforge/ui/screens/summary_screen")
+local kanbanBoardModule = require("taskforge/ui/screens/kanban_board")
+local screenProvider = require("taskforge/ui/screens/screen_provider")
+local TicketScreenModule = require("taskforge/ui/screens/ticket_screen")
 
 local navigator = {
     nameToId = {},
@@ -14,8 +14,8 @@ local paramaterToPass = nil
 navigator.nameToId["summary"] = SummaryScreenModule.id
 navigator.idToModule[SummaryScreenModule.id] = function() return screenProvider.getSummaryScreen() end
 
-navigator.nameToId["jira"] = JiraBoardModule.id
-navigator.idToModule[JiraBoardModule.id] = function() return screenProvider.getJiraBoardScreen() end
+navigator.nameToId["jira"] = kanbanBoardModule.id
+navigator.idToModule[kanbanBoardModule.id] = function() return screenProvider.getKanbanBoardScreen() end
 
 navigator.nameToId["ticket"] = TicketScreenModule.id
 navigator.idToModule[TicketScreenModule.id] = function() return screenProvider.getTicketScreen(paramaterToPass) end
@@ -35,7 +35,7 @@ end
 function navigator.to(name, param)
     currentModuleName = name
     paramaterToPass = param
-    table.insert(stack, {currentModuleName = name, paramaterToPass = param})
+    table.insert(stack, { currentModuleName = name, paramaterToPass = param })
 end
 
 function navigator.back()

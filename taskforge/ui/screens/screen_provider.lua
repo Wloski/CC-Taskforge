@@ -1,16 +1,16 @@
-local JiraBoardModule = require("mc-jira/ui/screens/jira_board")
-local SummaryScreenModule = require("mc-jira/ui/screens/summary_screen")
-local TicketScreenModule = require("mc-jira/ui/screens/ticket_screen")
+local KanbanBoardModule = require("taskforge/ui/screens/kanban_board")
+local SummaryScreenModule = require("taskforge/ui/screens/summary_screen")
+local TicketScreenModule = require("taskforge/ui/screens/ticket_screen")
 
-local DI = require("mc-jira/di/di")
+local DI = require("taskforge/di/di")
 local taskUtils = DI.get("taskUtils")
 local monitorUtils = DI.get("monitorUtils")
 local configUtils = DI.get("configUtils")
 
 local ScreenProvider = {}
-function ScreenProvider.getJiraBoardScreen()
+function ScreenProvider.getKanbanBoardScreen()
     local _tasks = taskUtils:loadTasks()
-    JiraBoardModule:build(
+    KanbanBoardModule:build(
         _tasks,
         function(tasks)
             taskUtils:saveTasks(tasks)
@@ -22,7 +22,7 @@ function ScreenProvider.getJiraBoardScreen()
         monitorUtils.width,
         monitorUtils.height
     )
-    return JiraBoardModule:create()
+    return KanbanBoardModule:create()
 end
 
 function ScreenProvider.getSummaryScreen()
@@ -31,6 +31,9 @@ function ScreenProvider.getSummaryScreen()
         _tasks,
         function(tasks)
             taskUtils:saveTasks(tasks)
+        end,
+        function(status)
+            return taskUtils:getStatusColor(status)
         end,
         configUtils.getConfig(),
         monitorUtils.width,
@@ -42,6 +45,15 @@ end
 function ScreenProvider.getTicketScreen(ticket)
     TicketScreenModule:build(
         ticket,
+        function(tasks)
+            taskUtils:saveTask(tasks)
+        end,
+        function(id)
+            taskUtils:deleteTaskById(id)
+        end,
+        function(status)
+            return taskUtils:getStatusColor(status)
+        end,
         configUtils.getConfig(),
         monitorUtils.width,
         monitorUtils.height

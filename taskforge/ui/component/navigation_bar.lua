@@ -1,17 +1,17 @@
-local Node = require("mc-jira/ui/base.node")
-local Button = require("mc-jira/ui/base.button")
-local Text = require("mc-jira/ui/base.text")
-local Column = require("mc-jira/ui/base.column")
-local Row = require("mc-jira/ui/base.row")
-local colorList = require("mc-jira/utils/colors")
+local Node = require("taskforge/ui/base.node")
+local Button = require("taskforge/ui/base.button")
+local Text = require("taskforge/ui/base.text")
+local Column = require("taskforge/ui/base.column")
+local Row = require("taskforge/ui/base.row")
+local colorList = require("taskforge/utils/colors")
 
-local DI = require("mc-jira/di/di")
+local DI = require("taskforge/di/di")
 local monitorUtils = DI.get("monitorUtils")
 
 local NavigationBarModule = {}
 local dynamicItems = {}
 local navigationBar = Row:new({
-    width = monitorUtils.width,
+    width = monitorUtils.width - 2,
     height = 1,
     backgroundColor = colors.gray
 })
@@ -48,7 +48,6 @@ function NavigationBarModule.findNavBarChildIndexById(id)
 end
 
 function NavigationBarModule.addNavigationBarItem(_id, _text, _onClick)
-    print("Navigation Bar Module adding: " .. _id)
     local row = Row:new({
         id = _id,
         width = string.len(_text) + 3,

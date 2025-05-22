@@ -45,7 +45,8 @@ function M.new(fs, textutils, save_path)
                         text = task.text,
                         status = type(task.status) == "number" and task.status or 1,
                         priority = task.priority or 1,
-                        startDate = task.startDate or nil
+                        startDate = task.startDate or nil,
+                        description = task.description or nil,
                     })
                 end
             end
@@ -72,13 +73,29 @@ function M.new(fs, textutils, save_path)
         f.close()
     end
 
-    function self:addTask(text, tasks)
-        local id = self:generateUniqueTaskId(tasks)
-        table.insert(tasks, { id = id, text = text, status = 1 })
-        self:saveTasks(tasks)
+    function self:saveTask(task)
+        local tasks = self:loadTasks()
+        if tasks == nil then
+            error("Tasks cannot be nil")
+        end
+
+        for i, t in ipairs(tasks) do
+            if t.id == task.id then
+                tasks[i] = task
+                break
+            end
+        end
+
+        if not self.fs.exists("data") then
+            self.fs.makeDir("data")
+        end
+        local f = self.fs.open(self.save_path, "w")
+        f.write(self.textutils.serialize(tasks))
+        f.close()
     end
 
-    function self:deleteTaskById(id, tasks)
+    function self:deleteTaskById(id)
+        local tasks = self:loadTasks()
         for i, task in ipairs(tasks) do
             if task.id == id then
                 table.remove(tasks, i)
@@ -87,6 +104,43 @@ function M.new(fs, textutils, save_path)
             end
         end
         return false
+    end
+
+    function self:addTask(text, tasks)
+        local id = self:generateUniqueTaskId(tasks)
+        table.insert(
+            tasks,
+            {
+                id = id,
+                text = text,
+                status = 1,
+                priority = 1,
+                description = nil,
+            }
+        )
+        self:saveTasks(tasks)
+    end
+
+    function self:deleteTaskById(id)
+        local tasks = self:loadTasks()
+        for i, task in ipairs(tasks) do
+            if task.id == id then
+                table.remove(tasks, i)
+                self:saveTasks(tasks)
+                return true
+            end
+        end
+        return false
+    end
+
+    function self:getStatusColor(status)
+        if status == 2 then
+            return colors.blue
+        elseif status == 3 then
+            return colors.green
+        else
+            return colors.gray
+        end
     end
 
     return self

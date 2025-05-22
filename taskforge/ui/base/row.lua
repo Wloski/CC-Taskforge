@@ -1,4 +1,4 @@
-local Node = require("mc-jira/ui/base/node")
+local Node = require("taskforge/ui/base/node")
 local Row = setmetatable({}, { __index = Node })
 Row.__index = Row
 
@@ -11,13 +11,16 @@ end
 
 function Row:addChild(child)
     child.parent = self
-    child.backgroundColor = self.backgroundColor or nil
+    child.backgroundColor = child.backgroundColor or self.backgroundColor
+    child.textColor = child.textColor or self.textColor
+    child.centerTextEnabled = child.centerTextEnabled or self.centerTextEnabled
+
     if #self.children == 0 then
         child.x = 0
         child.y = 0
     else
         local prev = self.children[#self.children]
-        child.x = prev.x + (prev.width or 1) + self.padding
+        child.x = prev.x + (prev.width or 1) + self.spaceBy
         child.y = 0
     end
     table.insert(self.children, child)

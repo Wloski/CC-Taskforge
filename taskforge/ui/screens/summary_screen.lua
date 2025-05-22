@@ -1,11 +1,11 @@
-local Node = require("mc-jira/ui/base.node")
-local Button = require("mc-jira/ui/base.button")
-local Text = require("mc-jira/ui/base.text")
-local Column = require("mc-jira/ui/base.column")
-local Row = require("mc-jira/ui/base.row")
-local colorList = require("mc-jira/utils/colors")
-local NavigationBar = require("mc-jira/ui/component.navigation_bar")
-local BaseScreen = require("mc-jira/ui/screens/base_screen")
+local Node = require("taskforge/ui/base.node")
+local Button = require("taskforge/ui/base.button")
+local Text = require("taskforge/ui/base.text")
+local Column = require("taskforge/ui/base.column")
+local Row = require("taskforge/ui/base.row")
+local colorList = require("taskforge/utils/colors")
+local NavigationBar = require("taskforge/ui/component.navigation_bar")
+local BaseScreen = require("taskforge/ui/screens/base_screen")
 
 local monitorWidth = 0
 local monitorHeight = 0
@@ -15,21 +15,13 @@ local COLS = nil
 
 local tasks = {}
 local saveTasks = nil
-
-local function getStatusColor(status)
-    if status == 2 then
-        return colors.blue
-    elseif status == 3 then
-        return colors.green
-    else
-        return colors.gray
-    end
-end
+local getStatusColor = nil
 
 local SummaryScreenModule = BaseScreen:new()
-function SummaryScreenModule:build(_tasks, _saveTasks, _config, _monitorWidth, _monitorHeight)
+function SummaryScreenModule:build(_tasks, _saveTasks, _getStatusColor, _config, _monitorWidth, _monitorHeight)
     tasks = _tasks
     saveTasks = _saveTasks
+    getStatusColor = _getStatusColor
     config = _config
     COLS = config.COLS
     monitorWidth = _monitorWidth
@@ -44,7 +36,7 @@ function SummaryScreenModule:create(monitor)
         backgroundColor = colors.gray,
     })
     local title = Text:new({
-        content = "MC-JIRA",
+        content = "Summary",
         color = colorList.white,
         width = monitorWidth - 2,
         height = 1,
@@ -63,6 +55,7 @@ function SummaryScreenModule:create(monitor)
             width = ticketDispalyWidth,
             height = 1,
             padding = 1,
+            spaceBy = 1,
         })
 
         local taskName = Text:new({
@@ -70,10 +63,9 @@ function SummaryScreenModule:create(monitor)
             width = 25,
             height = 1,
             onClick = function()
-                local onTaskClicked = function()
+                NavigationBar.addNavigationBarItem(task.id, task.id, function()
                     os.queueEvent("toggle_view", "ticket", task)
-                end
-                NavigationBar.addNavigationBarItem(task.id, task.id, onTaskClicked)
+                end)
                 os.queueEvent("toggle_view", "ticket", task)
             end
         })
@@ -93,17 +85,16 @@ function SummaryScreenModule:create(monitor)
             end
         })
 
-        local onDeleteClicked = function()
-            table.remove(tasks, i)
-            NavigationBar.removeNavigationBarItem(task.id)
-            saveTasks(tasks)
-        end
         local deleteButton = Button:new({
             label = "Delete",
             width = 7,
             height = 1,
             textColor = colors.red,
-            onClick = onDeleteClicked,
+            onClick = function()
+                table.remove(tasks, i)
+                NavigationBar.removeNavigationBarItem(task.id)
+                saveTasks(tasks)
+            end
         })
 
         ticketRow:addChild(taskName)
@@ -113,10 +104,38 @@ function SummaryScreenModule:create(monitor)
         ticketsColumn:addChild(ticketRow)
     end
 
+
+    local bottomBar = Row:new({
+        width = ticketDispalyWidth,
+        height = 1,
+    })
+    local createTicketButton = Button:new({
+        label = "Add",
+        width = 7,
+        height = 1,
+        textColor = colors.green,
+        onClick = function()
+            local newTask = {
+                id = "mc" .. math.random(1000, 9999),
+                text = "New Task",
+                status = 1,
+                priority = 1,
+            }
+            os.queueEvent("toggle_view", "ticket", newTask)
+            NavigationBar.addNavigationBarItem(newTask.id, newTask.id, function()
+                os.queueEvent("toggle_view", "ticket", newTask)
+            end
+            )
+            table.insert(tasks, newTask)
+            saveTasks(tasks)
+        end
+    })
+    bottomBar:addChild(createTicketButton)
+
     summaryScreenNode:addChild(NavigationBar.getNavBar())
     summaryScreenNode:addChild(titleRow)
     summaryScreenNode:addChild(ticketsColumn)
-
+    summaryScreenNode:addChild(bottomBar)
     return summaryScreenNode
 end
 

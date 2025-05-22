@@ -1,0 +1,46 @@
+{
+  {
+    text = "Setup drilling operation for oil",
+    priority = 1,
+    startDate = "Mon May 19 18:58:19 2025",
+    status = 3,
+    id = "mc-1070",
+    description = "There is oil at the bottom of the tunnel, setup a oil drill with storage",
+  },
+  {
+    text = "Setup rail network to transport oil",
+    priority = 1,
+    startDate = "Mon May 19 18:58:20 2025",
+    status = 1,
+    id = "mc-8317",
+  },
+  {
+    text = "Setup AE2 main network controller to support more channels",
+    priority = 1,
+    startDate = "Mon May 19 18:58:22 2025",
+    status = 3,
+    id = "mc-4396",
+    description = "Remove the current main network ME controllers and move them to an area where a 3x3 grid can be placed and all controller sides can be accessed",
+  },
+  {
+    text = "Setup ore 4x processing",
+    priority = 1,
+    startDate = "Mon May 19 18:58:22 2025",
+    status = 2,
+    id = "mc-4650",
+  },
+  {
+    text = "Fix lighting with the base",
+    priority = 1,
+    startDate = "Mon May 19 18:58:18 2025",
+    status = 3,
+    id = "mc-5082",
+  },
+  {
+    text = "Fix columns in AE2 room",
+    priority = 1,
+    startDate = "Mon May 19 18:58:20 2025",
+    status = 1,
+    id = "mc-1194",
+  },
+}

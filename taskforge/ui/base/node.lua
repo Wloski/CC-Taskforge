@@ -15,6 +15,7 @@ function Node:new(props)
         backgroundColor = props.backgroundColor or nil,
         textColor = props.textColor or colors.white,
         centerTextEnabled = props.centerTextEnabled or false,
+        spaceBy = props.spaceBy or 0,
         children = {}
     }
     setmetatable(instance, self)
@@ -68,7 +69,7 @@ end
 function Node:handleTouch(x, y)
     for _, child in ipairs(self.children) do
         if child:containsPoint(x, y) and child.onClick then
-            child:onClick()
+            child:onClick(child)
         end
         child:handleTouch(x, y)
     end
